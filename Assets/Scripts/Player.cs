@@ -14,11 +14,13 @@ public class Player : MonoBehaviour
     Animator anim;
 
     int score;
+    AudioSource  po;
 
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
+        po = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -60,6 +62,7 @@ public class Player : MonoBehaviour
         if(other.CompareTag("Collectable"))
         {
             score++;
+            po.Play();
             textMesh.text = $"Score: {score}";
             Destroy(other.gameObject);
         }   
