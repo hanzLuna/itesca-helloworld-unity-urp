@@ -16,13 +16,28 @@ public class Player : MonoBehaviour
     int score;
     AudioSource  po;
 
+    GameInputs gameInputs;
+
+
+    void Awake()
+    {
+        gameInputs = new GameInputs();
+        anim = GetComponent<Animator>();
+    }
     // Start is called before the first frame update
     void Start()
     {
-        anim = GetComponent<Animator>();
+        
         po = GetComponent<AudioSource>();
     }
 
+    void OnEnable() {
+        gameInputs.Enable();
+    }
+
+    void OnDisable() {
+        gameInputs.Disable();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -36,7 +51,7 @@ public class Player : MonoBehaviour
         if(IsMoving)
         {
             transform.Translate( Vector3.forward * Time.deltaTime * moveSpeed);
-            transform.rotation = Quaternion.LookRotation(Axis.normalized);
+            transform.rotation = Quaternion.LookRotation(new Vector3(Axis.x,0f,Axis.y));
         }
     }
 
@@ -44,7 +59,7 @@ public class Player : MonoBehaviour
     /// Retunrs the axis with H input and V Input.
     /// </summary>
     /// <returns></returns>
-    Vector3 Axis => new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+    Vector2 Axis =>gameInputs.Land.Move.ReadValue<Vector2>();
 
     /// <summary>
     /// Check if player is moving with inputs H and V.
