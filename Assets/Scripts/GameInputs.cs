@@ -25,6 +25,14 @@ public class @GameInputs : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""d5bfbb10-e3b8-4c8f-b6c9-59b25b772102"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -247,6 +255,17 @@ public class @GameInputs : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d49014c-80d0-4ba8-8b46-682618ff4ea2"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -290,6 +309,7 @@ public class @GameInputs : IInputActionCollection, IDisposable
         // Land
         m_Land = asset.FindActionMap("Land", throwIfNotFound: true);
         m_Land_Move = m_Land.FindAction("Move", throwIfNotFound: true);
+        m_Land_Jump = m_Land.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -340,11 +360,13 @@ public class @GameInputs : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Land;
     private ILandActions m_LandActionsCallbackInterface;
     private readonly InputAction m_Land_Move;
+    private readonly InputAction m_Land_Jump;
     public struct LandActions
     {
         private @GameInputs m_Wrapper;
         public LandActions(@GameInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Land_Move;
+        public InputAction @Jump => m_Wrapper.m_Land_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Land; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -357,6 +379,9 @@ public class @GameInputs : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_LandActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_LandActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_LandActionsCallbackInterface.OnMove;
+                @Jump.started -= m_Wrapper.m_LandActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_LandActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_LandActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_LandActionsCallbackInterface = instance;
             if (instance != null)
@@ -364,6 +389,9 @@ public class @GameInputs : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -398,5 +426,6 @@ public class @GameInputs : IInputActionCollection, IDisposable
     public interface ILandActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
