@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
+
 
 public class Player : MonoBehaviour
 {
@@ -12,37 +12,59 @@ public class Player : MonoBehaviour
     [SerializeField]
     float moveSpeed = 2f;
 
-    [SerializeField] private float jumpHeight =2f;
+    [SerializeField] 
+    float jumpHeight =5f;
 
     Animator anim;
 
     int score;
     AudioSource  po;
-     
+    
+    Rigidbody rb;
     GameInputs gameInputs;
-    public  void Jump()
-    {
-        transform.position = new Vector3(transform.position.x,transform.position.y + jumpHeight,transform.position.z);
-         anim.SetBool("isJumping",true);
-         
-    }
+   
+   ///////PARA DETECTAR EL RAYO//////
+    [SerializeField] 
+    Color rayColor = Color.magenta;
+    [SerializeField] 
+    float rayDistance = 5;
 
+    [SerializeField] 
+    LayerMask groundLayer; //layer del suelo paa saber que es esto
+
+    [SerializeField] 
+    Transform rayTransform;
     
     void Awake()
     {
         gameInputs = new GameInputs();
         anim = GetComponent<Animator>();
-      
+        rb = GetComponent<Rigidbody >();
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameInputs.Land.Jump.performed += _=> Jump();
         po = GetComponent<AudioSource>();
     }
 
-    
+    void Jump()
+    {
 
+        if(IsGrounding)
+        {
+             rb.AddForce(Vector3.up * jumpHeight,ForceMode.Impulse);
+        }
+        
+         
+    }
+
+    void FixedUpdate() //detecta la fisica
+    {
+        
+    }
+
+    bool IsGrounding => Physics.Raycast(rayTransform.position,-transform.up,rayDistance,groundLayer); //dice si esta tocando o no algo
     void OnEnable() {
         gameInputs.Enable();
     }
@@ -59,17 +81,7 @@ public class Player : MonoBehaviour
          
         
     }
-void FixedUpdate()
-{
-     if ( anim.GetBool("isJumping"))
-    {
-        anim.SetBool("isJumping",false);
-    }
-     if ( anim.GetBool("isRunning"))
-    {
-        anim.SetBool("isRunning",false);
-    }
-}
+
     void Movement()
     {
        
@@ -77,13 +89,9 @@ void FixedUpdate()
         {
             transform.Translate( Vector3.forward * Time.deltaTime * moveSpeed);
             transform.rotation = Quaternion.LookRotation(new Vector3(Axis.x,0f,Axis.y));
-            anim.SetBool("isRunning",true);
+            //anim.SetBool("isRunning",true);
         }   
-        var movem = new Vector3
-        {
-            x = Axis.x,
-            z = Axis.y
-        }.normalized;
+        
     }
     /// <summary>
     /// Retunrs the axis with H input and V Input.
@@ -112,5 +120,12 @@ void FixedUpdate()
             textMesh.text = $"Score: {score}";
             Destroy(other.gameObject);
         }   
+    }
+
+    void OnDrawGizmosSelected() 
+    {
+        //gizmo es como las lineas que forman un objeto, la apertura de la camara etc.
+        Gizmos.color = rayColor;
+        Gizmos.DrawRay(rayTransform.position, -transform.up * rayDistance);
     }
 }

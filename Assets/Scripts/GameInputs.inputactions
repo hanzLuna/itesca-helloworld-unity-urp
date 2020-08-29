@@ -15,11 +15,11 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "d5bfbb10-e3b8-4c8f-b6c9-59b25b772102",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -247,12 +247,45 @@
                     "name": "",
                     "id": "5d49014c-80d0-4ba8-8b46-682618ff4ea2",
                     "path": "<Keyboard>/space",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "PC",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Button With One Modifier",
+                    "id": "98837e42-ff2b-4c79-b644-b79d0d96bb7e",
+                    "path": "ButtonWithOneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "2f63a1d7-df1f-41ca-a641-209cdeeac5e7",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Android",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "button",
+                    "id": "fbc38d5f-6e0e-46ae-9b27-2530644c3328",
+                    "path": "<Touchscreen>/touch0/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Android",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
@@ -286,6 +319,11 @@
             "devices": [
                 {
                     "devicePath": "<AndroidJoystick>",
+                    "isOptional": true,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Touchscreen>",
                     "isOptional": true,
                     "isOR": false
                 }
