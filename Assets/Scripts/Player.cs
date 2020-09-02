@@ -53,15 +53,17 @@ public class Player : MonoBehaviour
 
         if(IsGrounding)
         {
+            anim.SetTrigger("jump");
              rb.AddForce(Vector3.up * jumpHeight,ForceMode.Impulse);
         }
         
          
     }
 
-    void FixedUpdate() //detecta la fisica
+    void LateUpdate() //se ejecuta despues del update
     {
-        
+        anim.SetBool("ground", IsGrounding);
+        anim.SetFloat("move", AxisMagnitudeAbs);
     }
 
     bool IsGrounding => Physics.Raycast(rayTransform.position,-transform.up,rayDistance,groundLayer); //dice si esta tocando o no algo
@@ -77,7 +79,7 @@ public class Player : MonoBehaviour
     {
         //movement 3d
         Movement();
-        anim.SetFloat("move", AxisMagnitudeAbs);
+        
          
         
     }
